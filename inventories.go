@@ -17,6 +17,11 @@ type ListInventoriesResponse struct {
 	Results []*Inventory `json:"results"`
 }
 
+type ListInventoryHostsResponse struct {
+	Pagination
+	Results []*Host `json:"results"`
+}
+
 // ListInventories shows list of awx inventories.
 func (i *InventoriesService) ListInventories(params map[string]string) ([]*Inventory, *ListInventoriesResponse, error) {
 	result := new(ListInventoriesResponse)
@@ -88,6 +93,23 @@ func (i *InventoriesService) UpdateInventory(id int, data map[string]interface{}
 func (i *InventoriesService) GetInventory(id int, params map[string]string) (*Inventory, error) {
 	endpoint := fmt.Sprintf("/api/v2/inventories/%d", id)
 	result := new(Inventory)
+	resp, err := i.client.Requester.GetJSON(endpoint, result, map[string]string{})
+	if err != nil {
+		return nil, err
+	}
+
+	if err := CheckResponse(resp); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+
+}
+
+// GetInventoryHost retrives the inventory information from its ID or Name
+func (i *InventoriesService) GetInventoryHostByName(id int, params map[string]string) (*ListInventoryHostsResponse, error) {
+	endpoint := fmt.Sprintf("/api/v2/inventories/%d/hosts", id)
+	result := new(ListInventoryHostsResponse)
 	resp, err := i.client.Requester.GetJSON(endpoint, result, map[string]string{})
 	if err != nil {
 		return nil, err
