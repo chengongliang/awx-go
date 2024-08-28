@@ -104,6 +104,25 @@ func (jt *JobTemplateService) UpdateJobTemplate(id int, data map[string]interfac
 	return result, nil
 }
 
+// UpdateJobTemplateCredential updates a job template credential
+func (jt *JobTemplateService) UpdateJobTemplateCredential(id int, data map[string]interface{}, params map[string]string) (*JobTemplate, error) {
+	result := new(JobTemplate)
+	endpoint := fmt.Sprintf("/api/v2/job_templates/%d/credentials", id)
+	payload, err := json.Marshal(data)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := jt.client.Requester.PostJSON(endpoint, bytes.NewReader(payload), result, params)
+	if err != nil {
+		return nil, err
+	}
+	if err := CheckResponse(resp); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
 // DeleteJobTemplate deletes a job template
 func (jt *JobTemplateService) DeleteJobTemplate(id int) (*JobTemplate, error) {
 	result := new(JobTemplate)
