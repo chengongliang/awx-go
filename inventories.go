@@ -110,7 +110,7 @@ func (i *InventoriesService) GetInventory(id int, params map[string]string) (*In
 func (i *InventoriesService) GetInventoryHostByName(id int, params map[string]string) (*ListInventoryHostsResponse, error) {
 	endpoint := fmt.Sprintf("/api/v2/inventories/%d/hosts", id)
 	result := new(ListInventoryHostsResponse)
-	resp, err := i.client.Requester.GetJSON(endpoint, result, map[string]string{})
+	resp, err := i.client.Requester.GetJSON(endpoint, result, params)
 	if err != nil {
 		return nil, err
 	}
